@@ -15,11 +15,12 @@
 - **C#**: Unityスクリプトの記述に使用
 - **Native WebSocket**: WebSocket通信を利用してリアルタイムデータを送受信し、音響制御や姿勢推定のデータを同期
 
-## インストール
+## クローン手順
 
-このプロジェクトをクローンし、必要な依存関係をインストールするには以下の手順を実行します。
+このプロジェクトにはサブモジューを含んでいる為、リポジトリをクローンした後、以下のコマンドを実行してサブモジュールを初期化し、必要な依存関係を取得する必要あり。
 
 ```bash
 git clone <repository-url>
-cd PoseAudioInteraction
+cd <repository-directory>
+git submodule update --init --recursive
 
