@@ -4,7 +4,7 @@ public class RotateAroundListener : MonoBehaviour
 {
     public Transform listenerTransform; // リスナー（通常はカメラ）のTransform
     public float rotationSpeed = 20.0f; // 回転速度
-    public float radius = 5.0f;         // リスナーからの距離（半径）
+    public float radius = 5.0f;         //  リスナーからの距離（半径）
 
     public Transform markerTransform;   // スフィアのTransform（可視化用）
     public AudioSource audioSource;     // 音源のAudio Source
@@ -28,7 +28,7 @@ public class RotateAroundListener : MonoBehaviour
         transform.position = new Vector3(x, transform.position.y, z);
 
         // デバッグログで位置を確認
-        Debug.Log($"New Position: x={x}, z={z}, angle={angle}");
+        //Debug.Log($"New Position: x={x}, z={z}, angle={angle}");
 
         // マーカーの位置を音源に合わせて更新
         if (markerTransform != null)
