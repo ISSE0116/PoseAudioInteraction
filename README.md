@@ -20,7 +20,7 @@
 このプロジェクトにはサブモジューを含んでいる為、リポジトリをクローンした後、以下のコマンドを実行してサブモジュールを初期化し、必要な依存関係を取得する必要あり。
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/ISSE0116/PoseAudioInteraction.git 
+cd https://github.com/ISSE0116/PoseAudioInteraction.git
 git submodule update --init --recursive
 
