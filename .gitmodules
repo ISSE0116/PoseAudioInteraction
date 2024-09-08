@@ -1,0 +1,3 @@
+[submodule "Assets/NativeWebSocket"]
+	path = Assets/NativeWebSocket
+	url = https://github.com/endel/NativeWebSocket.git
