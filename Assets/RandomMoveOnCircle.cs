@@ -22,13 +22,15 @@ public class ArcMovement : MonoBehaviour
     private bool isMoving = false;
     private bool isRepeating = false;
     private bool isStaticMode = false;
+    private bool isVerticalMode = false; // 垂直モードのフラグを追加
 
     public Button startButton;
     public Button nextButton;
     public Button repeatButton;
     public Button modeButton;
-    public TMP_InputField fileNameInput; // ファイル名入力用のTMP_InputField
-    public Button saveButton; // データ保存用のボタン
+    public Button movementModeButton; // 水平・垂直切り替え用のボタンを追加
+    public TMP_InputField fileNameInput;
+    public Button saveButton;
 
     private float previousStartAngle;
     private float previousEndAngle;
@@ -39,18 +41,16 @@ public class ArcMovement : MonoBehaviour
 
     void Start()
     {
-        // ボタンのクリックイベントを設定
         startButton.onClick.AddListener(StartMovement);
         nextButton.onClick.AddListener(NextMovement);
         repeatButton.onClick.AddListener(RepeatMovement);
         modeButton.onClick.AddListener(ToggleMode);
-        saveButton.onClick.AddListener(SaveTrajectoryDataWithFileName); // 保存ボタンのクリックイベント
+        movementModeButton.onClick.AddListener(ToggleMovementMode); // 垂直モードの切り替えボタンにリスナーを追加
+        saveButton.onClick.AddListener(SaveTrajectoryDataWithFileName);
 
-        // 音源の最初の位置を設定
         SetRandomAngles();
         UpdatePosition();
 
-        // InputFieldと保存ボタンを非表示にする
         fileNameInput.gameObject.SetActive(false);
         saveButton.gameObject.SetActive(false);
     }
@@ -59,44 +59,62 @@ public class ArcMovement : MonoBehaviour
     {
         if (isMoving && !isStaticMode)
         {
-            // 現在の角度を更新（時計回りか反時計回りかを確認）
+            // 現在の角度を更新 (角速度に基づいて、時計回りか反時計回りかを確認)
             if (movingClockwise)
             {
-                currentAngle += rotationSpeed * Time.deltaTime;
+                currentAngle += rotationSpeed * Time.deltaTime;  // 時間に基づいて角度を徐々に増加
                 if (currentAngle >= endAngle)
                 {
-                    currentAngle = endAngle;
-                    StopMovement();
+                    currentAngle = endAngle; // 終了角度に到達したら固定
+                    StopMovement(); // 動作を停止
                 }
             }
             else
             {
-                currentAngle -= rotationSpeed * Time.deltaTime;
+                currentAngle -= rotationSpeed * Time.deltaTime;  // 反時計回りに角度を減少
                 if (currentAngle <= endAngle)
                 {
-                    currentAngle = endAngle;
-                    StopMovement();
+                    currentAngle = endAngle; // 終了角度に到達したら固定
+                    StopMovement(); // 動作を停止
                 }
             }
 
-            // 音源とマーカーの位置を更新
+            // 音源の位置を更新
             UpdatePosition();
-            marker.position = soundSource.position;
+            marker.position = soundSource.position;  // マーカーの位置を音源と同期
 
-            // 軌跡データの記録
+            // 時間と角度を記録
             float elapsedTime = Time.time - startTime;
             trajectoryData.Add((elapsedTime, currentAngle));
         }
     }
 
+
     // 現在の角度に基づいて音源の位置を更新する
     void UpdatePosition()
     {
         float radians = currentAngle * Mathf.Deg2Rad;
-        float targetX = listener.position.x + radius * Mathf.Cos(radians);
-        float targetZ = listener.position.z + radius * Mathf.Sin(radians);
-        soundSource.position = new Vector3(targetX, soundSource.position.y, targetZ);
+        
+        if (isVerticalMode)
+        {
+            // 垂直方向の動き: Z軸固定で、X-Y平面を動く
+            float targetX = listener.position.x + radius * Mathf.Cos(radians);
+            float targetY = listener.position.y + radius * Mathf.Sin(radians);
+
+            // Z軸をリスナーの位置に固定する
+            soundSource.position = new Vector3(targetX, targetY, listener.position.z);
+        }
+        else
+        {
+            // 水平方向の動き: Y軸固定で、X-Z平面を動く
+            float targetX = listener.position.x + radius * Mathf.Cos(radians);
+            float targetZ = listener.position.z + radius * Mathf.Sin(radians);
+
+            // Y軸を固定して、X-Z平面を動く
+            soundSource.position = new Vector3(targetX, soundSource.position.y, targetZ);
+        }
     }
+
 
     // 移動を開始するメソッド
     void StartMovement()
@@ -107,7 +125,7 @@ public class ArcMovement : MonoBehaviour
             {
                 SaveCurrentAngles();
                 isMoving = true;
-                currentAngle = startAngle;
+                currentAngle = startAngle;  // 角度を開始角度に設定
                 UpdatePosition();
                 marker.position = soundSource.position;
 
@@ -116,6 +134,7 @@ public class ArcMovement : MonoBehaviour
                 startTime = Time.time;
 
                 audioSource.Play(); // 音を鳴らす
+                Debug.Log("Start movement at angle: " + startAngle);
             }
         }
         else
@@ -128,7 +147,7 @@ public class ArcMovement : MonoBehaviour
     // 次の移動を設定するメソッド
     void NextMovement()
     {
-        SetRandomAngles();
+        SetRandomAngles(); // ランダムに次の角度を設定
         currentAngle = startAngle;
         UpdatePosition();
         marker.position = soundSource.position;
@@ -169,6 +188,27 @@ public class ArcMovement : MonoBehaviour
         }
     }
 
+    // 水平・垂直モードを切り替えるメソッド
+    void ToggleMovementMode()
+    {
+        isVerticalMode = !isVerticalMode;
+        if (isVerticalMode)
+        {
+            // 垂直モードでは、水平方向の0度から開始
+            currentAngle = 0f;
+            startAngle = 0f;  // 水平方向の0度を開始角度に設定
+            Debug.Log("Switched to Vertical Mode. Start from horizontal 0 degrees.");
+        }
+        else
+        {
+            // 水平モードでは、0度の位置から開始
+            currentAngle = 0f;
+            startAngle = 0f;  // 水平方向の0度を開始角度に設定
+            Debug.Log("Switched to Horizontal Mode. Start from 0 degrees.");
+        }
+        UpdatePosition();  // 切り替えた際の位置を更新
+    }
+
     // 移動を停止するメソッド
     void StopMovement()
     {
@@ -196,9 +236,9 @@ public class ArcMovement : MonoBehaviour
     // ランダムな開始角度と終了角度を設定するメソッド
     void SetRandomAngles()
     {
-        startAngle = Random.Range(0, 24) * 15;
+        startAngle = Random.Range(0, 12) * 30;
         movingClockwise = (Random.value > 0.5f);
-        float[] angleOptions = { 45f, 60f, 75f, 90f };
+        float[] angleOptions = { 60f, 90f, 120f, 150f, 180f, 210f, 240f, 270f, 300f, 330f, 360f};
         float angleDifference = angleOptions[Random.Range(0, angleOptions.Length)];
         endAngle = startAngle + (movingClockwise ? angleDifference : -angleDifference);
 
