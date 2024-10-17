@@ -73,3 +73,7 @@ crashlytics-build.properties
 
 # Ignore Steam Audio plugin
 /[Aa]ssets/Plugins/SteamAudio/
+
+*.csv
+mono_crash*
+
