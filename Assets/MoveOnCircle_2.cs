@@ -51,6 +51,8 @@ public class CircleMovement_45 : MonoBehaviour
 
     private float previousStartAngle;
     private bool previousMovingClockwise;
+    private float selectedAngle = 0f;
+    private float currentSelectedAngle = 0f;
 
     void Start()
     {
