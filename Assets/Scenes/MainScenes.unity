@@ -435,8 +435,6 @@ MonoBehaviour:
   diagonalFrontBackButton: {fileID: 270213855}
   diagonalFrontButton: {fileID: 2005390265}
   diagonalBackButton: {fileID: 1369483508}
-  SelectAngleButton: {fileID: 449196890}
-  SelectRotationButton: {fileID: 17785368}
 --- !u!114 &4491807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3042,6 +3040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3115,6 +3114,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 26.557, y: 29.701, z: 1.254}
+--- !u!81 &963194229
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 0
 --- !u!1 &1028994590
 GameObject:
   m_ObjectHideFlags: 0

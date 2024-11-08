@@ -294,12 +294,12 @@ public class CircleMovement_45 : MonoBehaviour
 
     void MoveToFrontBack()
     {
-        StartCoroutine(MoveBetweenAngles(new float[] { 0f, 180f }, 2f, 3));
+        StartCoroutine(MoveBetweenAngles(new float[] { 90f, 270f }, 2f, 3));
     }
 
     void MoveToDiagonalFrontBack()
     {
-        StartCoroutine(MoveBetweenAngles(new float[] { 45f, 225f }, 2f, 3));
+        StartCoroutine(MoveBetweenAngles(new float[] { 45f, 315f }, 2f, 3));
     }
 
     void MoveToDiagonalFront()
