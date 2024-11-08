@@ -40,6 +40,8 @@ public class CircleMovement_45 : MonoBehaviour
     public Button diagonalFrontBackButton;
     public Button diagonalFrontButton;
     public Button diagonalBackButton;
+    public Button selectAngleButton;
+    public Button selectRotationButton;
 
     private List<(float time, float angle)> trajectoryData = new List<(float, float)>();
     private float startTime;
@@ -64,6 +66,8 @@ public class CircleMovement_45 : MonoBehaviour
         diagonalFrontBackButton.onClick.AddListener(MoveToDiagonalFrontBack);
         diagonalFrontButton.onClick.AddListener(MoveToDiagonalFront);
         diagonalBackButton.onClick.AddListener(MoveToDiagonalBack);
+        selectAngleButton.onClick.AddListener(SetSelectedAngle);
+        selectRotationButton.onClick.AddListener(SetRotationDirection);
 
         SetRandomAngles();
         UpdatePosition();
@@ -358,4 +362,24 @@ public class CircleMovement_45 : MonoBehaviour
         fileNameInput.gameObject.SetActive(false);
         saveButton.gameObject.SetActive(false);
     }
+
+    void SetSelectedAngle()
+    {
+        currentSelectedAngle += 45f;
+        if (currentSelectedAngle >= 360f)
+        {
+            currentSelectedAngle = 0f;
+        }
+
+        selectedAngle = currentSelectedAngle;
+        Debug.Log("Selected Start Angle: " + selectedAngle);
+    }
+
+    // SelectRotationButtonで呼び出されるメソッド
+    void SetRotationDirection()
+    {
+        movingClockwise = !movingClockwise;
+        Debug.Log("Selected Rotation Direction: " + (movingClockwise ? "Clockwise" : "Counterclockwise"));
+    }
+
 }
