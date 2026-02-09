@@ -18,9 +18,9 @@ Assets/
 │   ├── NEDO02.cs              # 顔向き(Yaw)データ連動
 │   ├── NEDO06.cs              # 両手首位置データ連動
 │   ├── NEDO46.cs              # 肩データ追従
-│   ├── CircleMoveContinuous.cs # 連続的な円周移動
-│   ├── MoveOnCircle_2.cs      # 45度刻みの離散移動
-│   └── MoveOnCircle3.cs       # Steam Audio対応版
+│   ├── NEDOBase.cs            # NEDO基底クラス
+│   ├── NEDOSettings.cs        # 設定管理
+│   └── CircleMovement.cs      # 円周移動（連続/離散、水平/垂直）
 ├── StreamingAssets/
 │   └── CSV/                   # 姿勢推定CSVデータ
 │       ├── face_orientation.csv
