@@ -23,9 +23,9 @@ Assets/
 │   └── CircleMovement.cs      # 円周移動（連続/離散、水平/垂直）
 ├── StreamingAssets/
 │   └── CSV/                   # 姿勢推定CSVデータ
-│       ├── face_orientation.csv
-│       ├── relative_wrist_to_nose.csv
-│       └── shoulder_center.csv
+│       ├── NEDO02.csv         # 顔向きデータ
+│       ├── NEDO06.csv         # 手首位置データ
+│       └── NEDO46.csv         # 肩位置データ
 └── Plugins/
     └── SteamAudio/            # Steam Audioプラグイン
 ```

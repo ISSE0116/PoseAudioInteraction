@@ -46,7 +46,7 @@ public class NEDO46 : NEDOBase
 
     protected override void Start()
     {
-        csvFileName = "CSV/shoulder_center.csv";
+        csvFileName = "CSV/NEDO46.csv";
         base.Start();
         
         if (soundSource != null)

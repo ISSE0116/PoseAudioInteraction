@@ -34,7 +34,7 @@ public class NEDO06 : NEDOBase
 
     protected override void Start()
     {
-        csvFileName = "CSV/relative_wrist_to_nose.csv";
+        csvFileName = "CSV/NEDO06.csv";
         frameRate = 30f; // このCSVは30fps
         base.Start();
     }

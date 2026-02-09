@@ -28,7 +28,7 @@ public class NEDO02 : NEDOBase
 
     protected override void Start()
     {
-        csvFileName = "CSV/face_orientation.csv";
+        csvFileName = "CSV/NEDO02.csv";
         base.Start();
     }
 
