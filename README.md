@@ -1,38 +1,80 @@
+# PoseAudioInteraction
+
 ## 概要
 
-**PoseAudioInteraction**は、Mediapipeを用いた姿勢推定に基づき、ユーザーの体の動きに応じて立体音響を制御するシステムの予定です。ユーザーが音源に近づくと音が大きくなり、遠ざかると音が小さくなる動的な音響環境を提供します。
+**PoseAudioInteraction**は、Mediapipeを用いた姿勢推定データに基づき、ユーザーの体の動きに応じて立体音響（HRTF）を制御するUnityプロジェクトです。CSVファイルに記録された姿勢データを再生し、音源位置をリアルタイムに制御します。
 
 ## 特徴
 
-- **リアルタイム姿勢推定**: Mediapipeを使用して、ユーザーの体のキーポイントをリアルタイムで検出。
-- **動的音響制御**: ユーザーの体の位置に基づいて音量を動的に調整。
-- **インタラクティブな3D音響環境**: 音源がユーザーの動きに適応して、よりリアルな立体音響を提供。
+- **HRTF（頭部伝達関数）による立体音響**: Steam Audioを使用した高品質な3D音響
+- **CSVデータ駆動**: 事前に記録した姿勢推定データを再生して音源を制御
+- **複数の制御モード**: 顔の向き、手首位置、肩の位置など様々なデータに対応
 
-## 技術
+## プロジェクト構成
 
-- **Unity**: 3D環境と音響制御のために使用。
-- **C#**: Unityスクリプトの記述に使用。
-- **Mediapipe**: リアルタイム姿勢推定のために使用。
+```
+Assets/
+├── Scripts/                    # C#スクリプト
+│   ├── NEDO02.cs              # 顔向き(Yaw)データ連動
+│   ├── NEDO06.cs              # 両手首位置データ連動
+│   ├── NEDO46.cs              # 肩データ追従
+│   ├── CircleMoveContinuous.cs # 連続的な円周移動
+│   ├── MoveOnCircle_2.cs      # 45度刻みの離散移動
+│   └── MoveOnCircle3.cs       # Steam Audio対応版
+├── StreamingAssets/
+│   └── CSV/                   # 姿勢推定CSVデータ
+│       ├── face_orientation.csv
+│       ├── relative_wrist_to_nose.csv
+│       └── shoulder_center.csv
+└── Plugins/
+    └── SteamAudio/            # Steam Audioプラグイン
+```
 
-## 使用したプラグイン
+## 技術スタック
 
-- **Native WebSocket**: WebSocket通信を利用してリアルタイムデータを送受信し、音響制御や姿勢推定のデータを同期。
-- **Steam Audio**: 3D音響環境を構築するためのオーディオプラグイン。
-- **Newtonsoft.Json**: JSONデータのシリアライズとデシリアライズを行うために使用。
+| 技術 | 用途 |
+|------|------|
+| **Unity** | 3D環境と音響制御 |
+| **C#** | スクリプト記述 |
+| **Steam Audio** | HRTF/立体音響処理 |
+| **Mediapipe** | 姿勢推定（データ生成時） |
 
-## クローン手順
+## 使用プラグイン
 
-このプロジェクトにはサブモジュールが含まれているため、リポジトリをクローンした後、以下のコマンドを実行してサブモジュールを初期化し、必要な依存関係を取得する必要があります。
+- **Steam Audio**: 3D音響環境を構築するためのオーディオプラグイン（HRTF対応）
+- **Native WebSocket**: WebSocket通信（リアルタイムデータ送受信用）
+- **Newtonsoft.Json**: JSONデータのシリアライズ/デシリアライズ
+
+## セットアップ
+
+### 1. クローン
 
 ```bash
-git clone https://github.com/ISSE0116/PoseAudioInteraction.git 
+git clone git@github.com:ISSE0116/PoseAudioInteraction.git
 cd PoseAudioInteraction
 git submodule update --init --recursive
 ```
 
-## Steam Audioのインストール手順
+### 2. Steam Audioのインストール
 
-このプロジェクトでは、3D音響処理のために`Steam Audio`プラグインが必要です。リポジトリには含まれていないため、以下の手順で個別にインストールしてください。
+1. [Steam Audio公式サイト](https://valvesoftware.github.io/steam-audio/downloads.html)から最新版をダウンロード
+2. 解凍して`Assets/Plugins/SteamAudio`フォルダにコピー
 
-1. [Steam Audioの公式サイト](https://valvesoftware.github.io/steam-audio/downloads.html)から最新版をダウンロードします。
-2. ダウンロードしたZIPファイルを解凍し、`Assets/Plugins/SteamAudio`フォルダにコピーします。
+### 3. SOFAファイル（HRTF）
+
+カスタムHRTFを使用する場合は、SOFAファイルを`Assets/`フォルダに配置し、Steam Audio Settingsで登録してください。
+
+## 使用方法
+
+1. **シーンを開く**: `Assets/Scenes/MainScenes.unity`
+2. **スクリプトを設定**: NEDOオブジェクトにNEDO02/06/46スクリプトをアタッチ
+3. **Inspectorで設定**:
+   - `Sound Source`: 音源のTransform
+   - `Listener`: リスナー（カメラ）のTransform
+   - `Audio Source`: AudioSourceコンポーネント
+   - `Button`: 再生開始ボタン
+4. **Playモードで実行**: ボタンをクリックしてCSVデータ再生を開始
+
+## ライセンス
+
+MIT License
