@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CircleMovement_45 : MonoBehaviour
+public class MoveOnCircle_2 : MonoBehaviour
 {
     public Transform listener;
     public Transform audioSourceMarker;
