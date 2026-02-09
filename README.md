@@ -75,6 +75,24 @@ git submodule update --init --recursive
    - `Button`: 再生開始ボタン
 4. **Playモードで実行**: ボタンをクリックしてCSVデータ再生を開始
 
+## テスト
+
+### 実行方法
+
+1. Unityエディターで `Window > General > Test Runner` を開く
+2. `EditMode` タブを選択
+3. `Run All` をクリック
+
+### テスト内容
+
+| テスト名 | 説明 |
+|----------|------|
+| `TryParseFloat_ValidNumber` | 正常な数値パースの検証 |
+| `TryParseFloat_None` | "None"文字列の処理検証 |
+| `TryParseFloat_EmptyString` | 空文字列の処理検証 |
+| `CalculateFrame_At60Fps` | 60fpsでのフレーム計算検証 |
+| `CalculateFrame_At30Fps` | 30fpsでのフレーム計算検証 |
+
 ## ライセンス
 
 MIT License
