@@ -14,21 +14,46 @@
 
 ```
 Assets/
-├── Scripts/                    # C#スクリプト
-│   ├── NEDO02.cs              # 顔向き(Yaw)データ連動
-│   ├── NEDO06.cs              # 両手首位置データ連動
-│   ├── NEDO46.cs              # 肩データ追従
-│   ├── NEDOBase.cs            # NEDO基底クラス
-│   ├── NEDOSettings.cs        # 設定管理
-│   └── CircleMovement.cs      # 円周移動（連続/離散、水平/垂直）
+├── Scenes/
+│   └── MainScenes.unity        # メインシーン（全Canvas統合）
+├── Scripts/
+│   ├── Controllers/            # 入出力制御
+│   │   ├── VideoController.cs  # 元動画の再生制御
+│   │   └── WebCamDisplay.cs    # Webカメラ映像表示
+│   ├── Managers/               # シーン・状態管理
+│   │   └── SceneNavigator.cs   # Canvas切り替えによる画面遷移
+│   ├── UI/                     # 各画面のUI管理
+│   │   ├── HomeManager.cs      # ホーム画面（トレーニング選択）
+│   │   ├── TrainingManager.cs  # トレーニング画面
+│   │   └── ResultManager.cs    # リザルト画面
+│   ├── NEDO02.cs               # 顔向き(Yaw)データ連動
+│   ├── NEDO06.cs               # 両手首位置データ連動
+│   ├── NEDO46.cs               # 肩データ追従
+│   ├── NEDOBase.cs             # NEDO基底クラス
+│   ├── NEDOSettings.cs         # 設定管理（ScriptableObject）
+│   └── CircleMovement.cs       # 円周移動（連続/離散、水平/垂直）
 ├── StreamingAssets/
-│   └── CSV/                   # 姿勢推定CSVデータ
-│       ├── NEDO02.csv         # 顔向きデータ
-│       ├── NEDO06.csv         # 手首位置データ
-│       └── NEDO46.csv         # 肩位置データ
+│   ├── CSV/                    # 姿勢推定CSVデータ
+│   │   ├── NEDO02.csv          # 顔向きデータ
+│   │   ├── NEDO06.csv          # 手首位置データ
+│   │   └── NEDO46.csv          # 肩位置データ
+│   └── *.mp4 / *.mov           # トレーニング元動画
 └── Plugins/
-    └── SteamAudio/            # Steam Audioプラグイン
+    └── SteamAudio/             # Steam Audioプラグイン
 ```
+
+## 画面フロー
+
+```
+Canvas_Home（ホーム画面）
+  ├── NEDO02 ボタン ──→ Canvas_Training（トレーニング画面）──→ Canvas_Result（リザルト画面）
+  ├── NEDO06 ボタン ──→          〃                                    │
+  └── NEDO46 ボタン ──→          〃                                    │
+                                                                       ↓
+                                                              ホームに戻る / リトライ
+```
+
+※ Canvas切り替え方式（`SetActive`）により、1つのシーン内で画面を切り替えます。
 
 ## 技術スタック
 
@@ -67,13 +92,10 @@ git submodule update --init --recursive
 ## 使用方法
 
 1. **シーンを開く**: `Assets/Scenes/MainScenes.unity`
-2. **スクリプトを設定**: NEDOオブジェクトにNEDO02/06/46スクリプトをアタッチ
-3. **Inspectorで設定**:
-   - `Sound Source`: 音源のTransform
-   - `Listener`: リスナー（カメラ）のTransform
-   - `Audio Source`: AudioSourceコンポーネント
-   - `Button`: 再生開始ボタン
-4. **Playモードで実行**: ボタンをクリックしてCSVデータ再生を開始
+2. **Playモードで実行**: ホーム画面が表示される
+3. **トレーニングを選択**: NEDO02/06/46ボタンをクリック
+4. **トレーニング実行**: 元動画とCSVデータ再生が開始
+5. **結果確認**: リザルト画面でスコアを確認、ホームに戻るかリトライ
 
 ## テスト
 
