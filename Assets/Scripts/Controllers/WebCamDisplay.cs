@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Webカメラの映像をRawImageに表示するクラス
+/// Canvas切り替えに対応（OnEnable/OnDisable）
 /// </summary>
 public class WebCamDisplay : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class WebCamDisplay : MonoBehaviour
 
     private WebCamTexture webCamTexture;
 
-    void Start()
+    void OnEnable()
     {
         if (displayImage == null)
         {
@@ -23,25 +24,35 @@ public class WebCamDisplay : MonoBehaviour
         StartWebCam();
     }
 
-    void StartWebCam()
+    void OnDisable()
     {
-        // カメラデバイスの取得
+        StopWebCam();
+    }
+
+    /// <summary>
+    /// Webカメラを開始する
+    /// </summary>
+    public void StartWebCam()
+    {
+        // 既に起動中なら何もしない
+        if (webCamTexture != null && webCamTexture.isPlaying)
+            return;
+
         WebCamDevice[] devices = WebCamTexture.devices;
         if (devices.Length == 0)
         {
-            Debug.LogWarning("WebCamDisplay: No camera detected.");
+            Debug.LogWarning("WebCamDisplay: カメラが検出されませんでした。");
             return;
         }
 
-        // 最初のカメラを使用（通常はインカメまたはデフォルトカメラ）
-        // 必要に応じてデバイス名でフィルタリング可能
+        // 最初のカメラを使用
         webCamTexture = new WebCamTexture(devices[0].name, 1280, 720, 30);
-        
+
         displayImage.texture = webCamTexture;
         webCamTexture.Play();
 
         Debug.Log($"WebCam Started: {devices[0].name} ({webCamTexture.width}x{webCamTexture.height})");
-        
+
         // アスペクト比の調整
         if (fitter != null)
         {
@@ -49,11 +60,24 @@ public class WebCamDisplay : MonoBehaviour
         }
     }
 
-    void OnDestroy()
+    /// <summary>
+    /// Webカメラを停止する
+    /// </summary>
+    public void StopWebCam()
     {
         if (webCamTexture != null)
         {
             webCamTexture.Stop();
+            Destroy(webCamTexture);
+            webCamTexture = null;
+
+            if (displayImage != null)
+                displayImage.texture = null;
         }
+    }
+
+    void OnDestroy()
+    {
+        StopWebCam();
     }
 }
