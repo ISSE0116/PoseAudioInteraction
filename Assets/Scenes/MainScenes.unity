@@ -5024,6 +5024,63 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &903906400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 903906402}
+  - component: {fileID: 903906401}
+  m_Layer: 0
+  m_Name: NED06_Module
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &903906401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903906400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9fb1b82f1fbc4f0daa8838873ef6752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listener: {fileID: 656908394}
+  audioSource: {fileID: 0}
+  csvFileName: relative_wrist_to_nose.csv
+  skipHeader: 1
+  frameRate: 60
+  loop: 0
+  leftSoundSource: {fileID: 1116745515}
+  rightSoundSource: {fileID: 4491797}
+  leftAudioSource: {fileID: 1116745519}
+  rightAudioSource: {fileID: 4491796}
+  nedo06Button: {fileID: 551294411}
+  scale: 4
+  verticalOffset: 0
+--- !u!4 &903906402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903906400}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5496084, y: 1.9999982, z: -9.365951}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &909203876
 GameObject:
   m_ObjectHideFlags: 0
@@ -5461,6 +5518,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 957182547}
   m_CullTransparentMesh: 1
+--- !u!1 &988424411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 988424413}
+  - component: {fileID: 988424412}
+  m_Layer: 0
+  m_Name: NED46_Module
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &988424412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988424411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a514a725dae4470bb14cd0a1c99718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listener: {fileID: 656908394}
+  audioSource: {fileID: 4491796}
+  csvFileName: shoulder_center.csv
+  skipHeader: 1
+  frameRate: 60
+  loop: 0
+  soundSource: {fileID: 4491797}
+  marker: {fileID: 61219990}
+  nedo46Button: {fileID: 105664517}
+  forwardDistance: 2
+  lateralRange: 1.5
+  mirrorX: 0
+  useEarHeight: 1
+  fixedHeightY: 1.6
+  enableSmoothing: 1
+  smooth: 12
+  ignoreMissing: 1
+--- !u!4 &988424413
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988424411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5496084, y: 1.9999982, z: -9.365951}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1000060472
 GameObject:
   m_ObjectHideFlags: 0
@@ -6438,7 +6556,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1292031748}
-  - component: {fileID: 1292031747}
   - component: {fileID: 1292031746}
   m_Layer: 0
   m_Name: TrainingManager
@@ -6464,20 +6581,9 @@ MonoBehaviour:
   txtCurrentTraining: {fileID: 876057196}
   videoController: {fileID: 1354269620}
   webCamDisplay: {fileID: 1349527694}
---- !u!114 &1292031747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1292031745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b88235d3626594c8aa0f8722d586b8ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  displayImage: {fileID: 0}
-  fitter: {fileID: 0}
+  nedo02: {fileID: 1403360154}
+  nedo06: {fileID: 903906401}
+  nedo46: {fileID: 988424412}
 --- !u!4 &1292031748
 Transform:
   m_ObjectHideFlags: 0
@@ -7360,41 +7466,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1403360153}
-  - component: {fileID: 1403360152}
   - component: {fileID: 1403360154}
-  - component: {fileID: 1403360155}
   m_Layer: 0
-  m_Name: NEDO
+  m_Name: NED02_Module
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1403360152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1403360151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9fb1b82f1fbc4f0daa8838873ef6752, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  listener: {fileID: 656908394}
-  audioSource: {fileID: 0}
-  csvFileName: relative_wrist_to_nose.csv
-  skipHeader: 1
-  frameRate: 60
-  loop: 0
-  leftSoundSource: {fileID: 1116745515}
-  rightSoundSource: {fileID: 4491797}
-  leftAudioSource: {fileID: 1116745519}
-  rightAudioSource: {fileID: 4491796}
-  nedo06Button: {fileID: 551294411}
-  scale: 4
-  verticalOffset: 0
 --- !u!4 &1403360153
 Transform:
   m_ObjectHideFlags: 0
@@ -7432,35 +7511,6 @@ MonoBehaviour:
   marker: {fileID: 61219990}
   nedo02Button: {fileID: 1000060474}
   radius: 5
---- !u!114 &1403360155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1403360151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05a514a725dae4470bb14cd0a1c99718, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  listener: {fileID: 656908394}
-  audioSource: {fileID: 4491796}
-  csvFileName: shoulder_center.csv
-  skipHeader: 1
-  frameRate: 60
-  loop: 0
-  soundSource: {fileID: 4491797}
-  marker: {fileID: 61219990}
-  nedo46Button: {fileID: 105664517}
-  forwardDistance: 2
-  lateralRange: 1.5
-  mirrorX: 0
-  useEarHeight: 1
-  fixedHeightY: 1.6
-  enableSmoothing: 1
-  smooth: 12
-  ignoreMissing: 1
 --- !u!1 &1414922649
 GameObject:
   m_ObjectHideFlags: 0
@@ -9123,7 +9173,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1709020987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10150,7 +10200,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2065378634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10376,6 +10426,8 @@ SceneRoots:
   - {fileID: 670535874}
   - {fileID: 909203878}
   - {fileID: 1403360153}
+  - {fileID: 903906402}
+  - {fileID: 988424413}
   - {fileID: 1478116672}
   - {fileID: 1834709866}
   - {fileID: 2065378637}

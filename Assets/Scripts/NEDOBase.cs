@@ -27,6 +27,13 @@ public abstract class NEDOBase : MonoBehaviour
     public float frameRate = 60f;       // CSVのフレームレート
     public bool loop = false;           // ループ再生
 
+    // ========== コールバック ==========
+
+    /// <summary>
+    /// 再生完了時に呼ばれるコールバック
+    /// </summary>
+    public System.Action onPlaybackComplete;
+
     // ========== 内部変数 ==========
     
     protected float elapsedTime = 0f;
@@ -144,6 +151,7 @@ public abstract class NEDOBase : MonoBehaviour
             isPlaying = false;
             audioSource?.Stop();
             Debug.Log($"{GetType().Name}: 再生終了");
+            onPlaybackComplete?.Invoke();
         }
     }
 
