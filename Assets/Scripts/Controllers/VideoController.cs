@@ -13,6 +13,7 @@ public class VideoController : MonoBehaviour
 
     [Header("Display")]
     public RawImage displayImage;       // 映像表示先のRawImage
+    public AspectRatioFitter fitter;    // アスペクト比調整
 
     [Header("Settings")]
     public bool playOnStart = false;
@@ -60,10 +61,35 @@ public class VideoController : MonoBehaviour
         // AudioSourceモードに設定
         videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
 
-        // RenderTextureを作成してVideoPlayerとRawImageに接続
-        SetupRenderTexture(1280, 720);
-
+        // 動画の準備完了時にRenderTextureを作成
+        videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.Prepare();
+    }
+
+    /// <summary>
+    /// 動画の準備完了時コールバック。実際の解像度でRenderTextureを作成する
+    /// </summary>
+    private void OnVideoPrepared(VideoPlayer vp)
+    {
+        vp.prepareCompleted -= OnVideoPrepared;
+
+        int width = (int)vp.width;
+        int height = (int)vp.height;
+
+        if (width == 0 || height == 0)
+        {
+            width = 1280;
+            height = 720;
+        }
+
+        Debug.Log($"VideoController: 動画解像度 {width}x{height}");
+        SetupRenderTexture(width, height);
+
+        // アスペクト比の調整
+        if (fitter != null)
+        {
+            fitter.aspectRatio = (float)width / height;
+        }
     }
 
     /// <summary>

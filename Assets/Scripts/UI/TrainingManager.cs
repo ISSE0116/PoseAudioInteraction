@@ -22,6 +22,9 @@ public class TrainingManager : MonoBehaviour
     public NEDO06 nedo06;
     public NEDO46 nedo46;
 
+    [Header("Pose Estimation")]
+    public PoseEstimator poseEstimator;     // リアルタイム姿勢推定
+
     private NEDOBase activeNedo;                 // 現在アクティブなNEDOモジュール
 
     void Start()

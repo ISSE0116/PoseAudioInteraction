@@ -76,6 +76,14 @@ public class WebCamDisplay : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// WebCamTextureを外部に公開する（PoseEstimator等で使用）
+    /// </summary>
+    public WebCamTexture GetWebCamTexture()
+    {
+        return webCamTexture;
+    }
+
     void OnDestroy()
     {
         StopWebCam();
