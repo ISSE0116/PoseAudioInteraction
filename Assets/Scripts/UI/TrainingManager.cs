@@ -25,6 +25,9 @@ public class TrainingManager : MonoBehaviour
     [Header("Pose Estimation")]
     public PoseEstimator poseEstimator;     // リアルタイム姿勢推定
 
+    [Header("Movement Evaluation")]
+    public MovementEvaluator movementEvaluator;  // 動き評価
+
     private NEDOBase activeNedo;                 // 現在アクティブなNEDOモジュール
 
     void Start()
@@ -51,6 +54,12 @@ public class TrainingManager : MonoBehaviour
 
         // NEDO再生を開始（CSV + AudioSource）
         StartNedoPlayback(selectedId);
+
+        // 動き評価を開始
+        if (movementEvaluator != null && activeNedo != null)
+        {
+            movementEvaluator.StartEvaluation(selectedId, activeNedo.frameRate);
+        }
     }
 
     void OnDisable()
@@ -59,6 +68,12 @@ public class TrainingManager : MonoBehaviour
         if (videoController != null)
         {
             videoController.Stop();
+        }
+
+        // 動き評価を停止
+        if (movementEvaluator != null && movementEvaluator.IsEvaluating)
+        {
+            movementEvaluator.StopEvaluation();
         }
 
         StopNedoPlayback();
@@ -126,7 +141,16 @@ public class TrainingManager : MonoBehaviour
     /// </summary>
     private void OnNedoPlaybackComplete()
     {
-        Debug.Log("TrainingManager: 再生完了 → リザルト画面へ遷移");
+        // 動き評価を停止しスコアを取得
+        if (movementEvaluator != null)
+        {
+            movementEvaluator.StopEvaluation();
+            SceneNavigator.Instance.LastScore = movementEvaluator.FinalScore;
+            SceneNavigator.Instance.LastDtwScore = movementEvaluator.DtwScore;
+            Debug.Log($"TrainingManager: 再生完了 コサイン={movementEvaluator.FinalScore:F1} DTW={movementEvaluator.DtwScore:F1}");
+        }
+
+        Debug.Log("TrainingManager: リザルト画面へ遷移");
         SceneNavigator.Instance.LoadResult();
     }
 

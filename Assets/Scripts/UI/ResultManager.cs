@@ -24,10 +24,12 @@ public class ResultManager : MonoBehaviour
 
     void OnEnable()
     {
-        // Canvas表示時に毎回実行される
+        // Canvas表示時にスコアを表示
         if (txtResultScore != null)
         {
-            txtResultScore.text = "Score: --";
+            float cosScore = SceneNavigator.Instance != null ? SceneNavigator.Instance.LastScore : 0f;
+            float dtwScore = SceneNavigator.Instance != null ? SceneNavigator.Instance.LastDtwScore : 0f;
+            txtResultScore.text = $"コサイン類似度: {cosScore:F1} 点\nDTW: {dtwScore:F1} 点";
         }
     }
 

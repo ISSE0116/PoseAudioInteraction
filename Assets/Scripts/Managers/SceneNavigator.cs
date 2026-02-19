@@ -11,6 +11,12 @@ public class SceneNavigator : MonoBehaviour
     // 選択されたトレーニングID（例: "NEDO02", "NEDO06", "NEDO46"）
     public string SelectedNedoId { get; set; }
 
+    // トレーニングの評価スコア（0〜100）
+    public float LastScore { get; set; }
+
+    // DTWスコア（0〜100）
+    public float LastDtwScore { get; set; }
+
     [Header("Canvas References")]
     public GameObject canvasHome;
     public GameObject canvasTraining;
