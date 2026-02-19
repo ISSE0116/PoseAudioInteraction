@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 /// <summary>
@@ -190,5 +192,45 @@ public abstract class NEDOBase : MonoBehaviour
         {
             Debug.LogWarning($"{GetType().Name}: {buttonName}が未設定です");
         }
+    }
+
+    // ========== StreamingAssets 読み込み（Android対応） ==========
+
+    /// <summary>
+    /// StreamingAssetsからテキストファイルを読み込む（Android対応）
+    /// Androidでは UnityWebRequest を使用し、PC では直接読み込む
+    /// </summary>
+    public static IEnumerator LoadStreamingAssetText(string relativePath, System.Action<string> onComplete)
+    {
+        string fullPath = Path.Combine(Application.streamingAssetsPath, relativePath);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        // Android: APK内のファイルは UnityWebRequest でアクセス
+        using var request = UnityWebRequest.Get(fullPath);
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            onComplete?.Invoke(request.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogError($"StreamingAssets読み込みエラー: {fullPath} - {request.error}");
+            onComplete?.Invoke(null);
+        }
+#else
+        // PC/Mac/Editor: 直接ファイルアクセス
+        if (File.Exists(fullPath))
+        {
+            string text = File.ReadAllText(fullPath);
+            onComplete?.Invoke(text);
+        }
+        else
+        {
+            Debug.LogError($"ファイルが見つかりません: {fullPath}");
+            onComplete?.Invoke(null);
+        }
+        yield return null;
+#endif
     }
 }

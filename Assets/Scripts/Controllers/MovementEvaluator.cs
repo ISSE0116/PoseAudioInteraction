@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -68,16 +69,29 @@ public class MovementEvaluator : MonoBehaviour
         FinalScore = 0f;
         DtwScore = 0f;
 
-        LoadCsvFeatures(nedoId);
+        // コルーチンでCSV読み込み（Android対応）
+        StartCoroutine(LoadCsvAndStartEvaluation(nedoId));
+    }
+
+    private IEnumerator LoadCsvAndStartEvaluation(string nedoId)
+    {
+        string csvFileName = GetCsvFileName(nedoId);
+        string csvText = null;
+
+        yield return NEDOBase.LoadStreamingAssetText(csvFileName, text => csvText = text);
+
+        if (string.IsNullOrEmpty(csvText))
+        {
+            Debug.LogWarning($"MovementEvaluator: CSVデータなし ({nedoId})");
+            yield break;
+        }
+
+        ParseCsvText(nedoId, csvText);
 
         if (_totalCsvFrames > 0)
         {
             _isEvaluating = true;
             Debug.Log($"MovementEvaluator: 評価開始 ({nedoId}, {_totalCsvFrames}フレーム)");
-        }
-        else
-        {
-            Debug.LogWarning($"MovementEvaluator: CSVデータなし ({nedoId})");
         }
     }
 
@@ -132,25 +146,18 @@ public class MovementEvaluator : MonoBehaviour
 
     // ========== CSV読み込み ==========
 
-    private void LoadCsvFeatures(string nedoId)
+    /// <summary>
+    /// CSVテキストをパースして特徴量リストに格納する
+    /// </summary>
+    private void ParseCsvText(string nedoId, string csvText)
     {
         _csvFeatures.Clear();
-        string csvFileName = GetCsvFileName(nedoId);
-        string path = Path.Combine(Application.streamingAssetsPath, csvFileName);
+        var lines = csvText.Split('\n');
 
-        if (!File.Exists(path))
+        // ヘッダースキップ
+        for (int i = 1; i < lines.Length; i++)
         {
-            Debug.LogError($"MovementEvaluator: CSVが見つかりません: {path}");
-            _totalCsvFrames = 0;
-            return;
-        }
-
-        using var reader = new StreamReader(path);
-        reader.ReadLine(); // ヘッダースキップ
-
-        while (!reader.EndOfStream)
-        {
-            string line = reader.ReadLine();
+            string line = lines[i].Trim();
             if (string.IsNullOrEmpty(line)) continue;
 
             string[] values = line.Split(',');

@@ -17,7 +17,7 @@ public class PoseEstimator : MonoBehaviour
     public WebCamDisplay webCamDisplay;
 
     [Header("Settings")]
-    [Tooltip("モデルタイプ: lite, full, heavy")]
+    [Tooltip("モデルタイプ: lite, full, heavy（モバイルでは自動でLiteに切替）")]
     public ModelType modelType = ModelType.Full;
 
     [Tooltip("最小検出信頼度")]
@@ -27,6 +27,10 @@ public class PoseEstimator : MonoBehaviour
     [Tooltip("最小追跡信頼度")]
     [Range(0f, 1f)]
     public float minTrackingConfidence = 0.5f;
+
+    [Header("Performance")]
+    [Tooltip("何フレームごとに推定を実行するか（1=毎フレーム）")]
+    public int estimateEveryNFrames = 1;
 
     [Header("Debug")]
     public bool logLandmarks = false;
@@ -49,6 +53,7 @@ public class PoseEstimator : MonoBehaviour
     private Texture2D _inputTexture;
     private bool _isRunning = false;
     private bool _resourceManagerInitialized = false;
+    private int _frameCounter = 0;
 
     // ========== モデルタイプ ==========
 
@@ -61,13 +66,40 @@ public class PoseEstimator : MonoBehaviour
 
     private string GetModelPath()
     {
-        switch (modelType)
+        // モバイルでは自動的にLiteモデルを使用
+        var type = IsMobilePlatform() ? ModelType.Lite : modelType;
+
+        switch (type)
         {
             case ModelType.Lite: return "pose_landmarker_lite.bytes";
             case ModelType.Full: return "pose_landmarker_full.bytes";
             case ModelType.Heavy: return "pose_landmarker_heavy.bytes";
             default: return "pose_landmarker_full.bytes";
         }
+    }
+
+    /// <summary>
+    /// モバイルプラットフォームかどうか判定する
+    /// </summary>
+    private bool IsMobilePlatform()
+    {
+#if UNITY_ANDROID || UNITY_IOS
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// プラットフォームに応じたDelegateを取得する
+    /// </summary>
+    private Mediapipe.Tasks.Core.BaseOptions.Delegate GetDelegate()
+    {
+#if UNITY_ANDROID || UNITY_IOS
+        return Mediapipe.Tasks.Core.BaseOptions.Delegate.GPU;
+#else
+        return Mediapipe.Tasks.Core.BaseOptions.Delegate.CPU;
+#endif
     }
 
     // ========== ライフサイクル ==========
@@ -104,9 +136,12 @@ public class PoseEstimator : MonoBehaviour
         yield return AssetLoader.PrepareAssetAsync(modelPath);
 
         // PoseLandmarker の作成（IMAGEモードで同期的に処理）
+        var selectedDelegate = GetDelegate();
+        Debug.Log($"PoseEstimator: Delegate={selectedDelegate}, Model={modelPath}");
+
         var options = new PoseLandmarkerOptions(
             new Mediapipe.Tasks.Core.BaseOptions(
-                Mediapipe.Tasks.Core.BaseOptions.Delegate.CPU,
+                selectedDelegate,
                 modelAssetPath: modelPath
             ),
             runningMode: Mediapipe.Tasks.Vision.Core.RunningMode.IMAGE,
@@ -132,6 +167,11 @@ public class PoseEstimator : MonoBehaviour
 
             if (!_isRunning || webCamDisplay == null)
                 break;
+
+            // フレームスキップ制御
+            _frameCounter++;
+            if (estimateEveryNFrames > 1 && _frameCounter % estimateEveryNFrames != 0)
+                continue;
 
             // WebCamTextureから画像を取得
             var webCamTexture = webCamDisplay.GetWebCamTexture();
